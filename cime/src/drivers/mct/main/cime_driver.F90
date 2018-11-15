@@ -31,6 +31,7 @@ program cime_driver
   use cime_comp_mod, only : cime_init
   use cime_comp_mod, only : cime_run
   use cime_comp_mod, only : cime_final
+  use ittnotify, only : itt_resume, itt_pause
 
   implicit none
 
@@ -40,6 +41,9 @@ program cime_driver
   integer(i8) :: beg_count, end_count, irtc_rate
   real(r8)    :: cime_pre_init1_time, ESMF_Initialize_time, &
        cime_pre_init2_time, cime_init_time_adjustment
+
+  ! Intel Tools
+  call itt_pause()
 
   !--------------------------------------------------------------------------
   ! Setup and initialize the communications and logging.
@@ -100,6 +104,7 @@ program cime_driver
   call t_startstop_valsf('CPL:INIT',  walltime=cime_init_time_adjustment, &
        callcount=0)
 
+  call itt_resume()
   call cime_run()
   call cime_final()
 
